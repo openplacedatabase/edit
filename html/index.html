@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Editing</title>
+  <style type='text/css'>
+    .container {
+      width: 90%;
+      border: solid 1px #eee;
+      margin: 2% auto;
+      padding: 2%;
+    }
+    .message {
+      color: #333333;
+      font-family: arial;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 2% 0;
+      padding: 10px;
+      display: none;
+    }
+    .error {
+      background-color: #ffebe8;
+      border: 1px solid #dd3c10;
+    }
+    .info {
+      background-color: #eceff6;
+        border: 1px solid #d4dae8;
+    }
+    .preview {
+      display: none;
+    }
+  </style>
+  <script type='text/javascript' src='//code.jquery.com/jquery-1.10.1.js'></script>
+  <script type='text/javascript'>
+    $(window).load(function(){
+      var doc = document;
+      var oError = null;
+      var oFileIn = doc.getElementById('fileIn');
+      var oFileReader = new FileReader();
+      var oImage = new Image();
+      oFileIn.addEventListener('change', function () {
+        var oFile = this.files[0];
+        var oLogInfo = doc.getElementById('logInfo');
+        var rFltr = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+        try {
+          if (rFltr.test(oFile.type)) {
+            oFileReader.readAsDataURL(oFile);
+            oLogInfo.setAttribute('class', 'message info');
+            throw 'Preview for ' + oFile.name;
+          } else {
+            oLogInfo.setAttribute('class', 'message error');
+            throw oFile.name + ' is not a valid image';
+          }
+        } catch (err) {
+          if (oError) {
+            oLogInfo.removeChild(oError);
+            oError = null;
+            $('#logInfo').fadeOut();
+            $('#imgThumb').fadeOut();
+          }
+          oError = doc.createTextNode(err);
+          oLogInfo.appendChild(oError);
+          $('#logInfo').fadeIn();
+        }
+    }, false);
+    oFileReader.addEventListener('load', function (e) {
+      oImage.src = e.target.result;
+    }, false);
+    oImage.addEventListener('load', function () {
+      if (oCanvas) {
+        oCanvas = null;
+        oContext = null;
+        $('#imgThumb').fadeOut();
+      }
+      var oCanvas = doc.getElementById('imgThumb');
+      var oContext = oCanvas.getContext('2d');
+      var nWidth = (this.width > 500) ? this.width / 1 : this.width;
+      var nHeight = (this.height > 500) ? this.height / 1 : this.height;
+      oCanvas.setAttribute('width', nWidth);
+      oCanvas.setAttribute('height', nHeight);
+      oContext.drawImage(this, 0, 0, nWidth, nHeight);
+      $('#imgThumb').fadeIn();
+    }, false);
+
+    var canvas = doc.getElementById('imgThumb');
+/*
+    canvas.addEventListener('click', function(evt) {
+      var mousePos = getMousePos(canvas, evt);
+      var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+      //console.log(message);
+      var context = canvas.getContext('2d');
+      // Get the RGB for this pixel
+      var imgd = context.getImageData(mousePos.x, mousePos.y, 1, 1);
+      var origRGB = {
+        r: imgd.data[0],
+        g: imgd.data[1],
+        b: imgd.data[2],
+      };
+
+      var starttime = Date.now();
+      var imgd = context.getImageData(0, 0, this.width, this.height);
+      var pix = imgd.data;
+
+      // Loop over each pixel and invert the color.
+      for (var i = 0, n = pix.length; i < n; i += 4) {
+        var diff = getDiff(origRGB,{r:pix[i],g:pix[i+1],b:pix[1+2]});
+        diff = (diff-200)/2;
+        //console.log(diff);
+        //break;
+        diff = Math.floor(diff);
+        if(diff > 255) diff = 255;
+        if(diff < 0) diff = 0;
+        pix[i  ] = diff;
+        pix[i+1] = diff;
+        pix[i+2] = diff;
+        //if(i > 400) break;
+      }
+      
+      // Draw the ImageData at the given (x,y) coordinates.
+      context.putImageData(imgd, 0, 0);
+      console.log(Date.now() - starttime);
+    }, false);
+*/
+/*
+    var currentRGB = null;
+    canvas.addEventListener('click', function(evt) {
+      var mousePos = getMousePos(canvas, evt);
+      var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+      //console.log(message);
+      var context = canvas.getContext('2d');
+      // Get the RGB for this pixel
+      var imgd = context.getImageData(mousePos.x, mousePos.y, 1, 1);
+      var newRGB = {
+        r: imgd.data[0],
+        g: imgd.data[1],
+        b: imgd.data[2],
+      };
+
+      if(currentRGB) {
+        console.log(getDiff(currentRGB,newRGB));
+      }
+
+      currentRGB = newRGB;
+
+    });
+*/
+    canvas.addEventListener('click', function(evt) {
+      var mousePos = getMousePos(canvas, evt);
+      //console.log(message);
+      var context = canvas.getContext('2d');
+      // Get the RGB for this pixel
+      var imgd = context.getImageData(mousePos.x, mousePos.y, 1, 1);
+      var origRGB = {
+        r: imgd.data[0],
+        g: imgd.data[1],
+        b: imgd.data[2],
+      };
+
+      var imgd = context.getImageData(0, 0, this.width, this.height);
+      var pix = imgd.data;
+      var lowest = Infinity;
+      // Loop over each pixel and invert the color.
+      for (var i = 0, n = pix.length; i < n; i += 4) {
+        var diff = getDiff(origRGB,{r:pix[i],g:pix[i+1],b:pix[1+2]});
+        if(diff < lowest) lowest = diff;
+        if(diff < 130) {
+          diff = 0;
+        } else {
+          diff = 255;
+        }
+        pix[i  ] = diff;
+        pix[i+1] = diff;
+        pix[i+2] = diff;
+      }
+      
+      // Draw the ImageData at the given (x,y) coordinates.
+      context.putImageData(imgd, 0, 0);
+      console.log(lowest);
+    }, false);
+
+
+    function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+
+    function getDiff(e1,e2) {
+      var rmean = ( e1.r + e2.r ) / 2;
+      var r = e1.r - e2.r;
+      var g = e1.g - e2.g;
+      var b = e1.b - e2.b;
+      return Math.sqrt((((512+rmean)*r*r)>>8) + 4*g*g + (((767-rmean)*b*b)>>8));
+    }
+
+  });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <input type="file" id="fileIn"></input>
+    <div class="message" id="logInfo"></div>
+    <canvas class="preview" id="imgThumb"></canvas>
+  </div>
+</body>
+</html>
