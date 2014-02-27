@@ -29,11 +29,16 @@ function setupImageControls(){
     jImage.css('width', '100%').data('zoom_percent', 1);
   }, false);
   
+  // Zoom events
   $('#image-zoom-in').click(function(){
     changeImageZoom(.15);
   });
   $('#image-zoom-out').click(function(){
     changeImageZoom(-.15);
+  });
+  $('#image-container').on('mousewheel', function(e){
+    var zoom = e.deltaY > 0 ? .15 : -.15;
+    changeImageZoom(zoom);
   });
 };
 
