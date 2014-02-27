@@ -30,10 +30,10 @@ function setupImageControls(){
   }, false);
   
   $('#image-zoom-in').click(function(){
-    changeImageZoom(.1);
+    changeImageZoom(.15);
   });
   $('#image-zoom-out').click(function(){
-    changeImageZoom(-.1);
+    changeImageZoom(-.15);
   });
 };
 
@@ -42,8 +42,16 @@ function setupImageControls(){
  */
 function changeImageZoom(changePercent){
   var image = $('#loaded-image'),
-      newZoom = image.data('zoom_percent') + changePercent,
-      scale = 'scale(' + newZoom + ')';
+      oldZoom = image.data('zoom_percent');
+  if(changePercent > 0){
+    newZoom = oldZoom * (1 + changePercent);
+  } else {
+    newZoom = oldZoom / (1 - changePercent);
+  }
+  var scale = 'scale(' + newZoom + ')';
+  if(newZoom < .00001){
+    return;
+  }
   image.css({
     'transform': scale,
     '-ms-transform': scale,
