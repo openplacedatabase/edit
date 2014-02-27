@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Warper Test</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/warper.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="header">
+      <h1>Open Place Database - Map Warper</h1>
+    </div>
+    
+    <div id="main">
+      
+      <!-- original image column -->
+      <div class="main-col">
+        <div id="image-container">
+          <img id="loaded-image" />
+        </div>
+        <div id="image-buttons">
+          <div id="zoom-buttons" class="btn-group">
+            <button type="button" id="image-zoom-out" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></button>
+            <button type="button" id="image-zoom-in" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+          </div>
+          <input type="file" id="file-in"></input>
+        </div>
+      </div>
+      
+      <!-- map column -->
+      <div class="main-col">Column 2</div>
+    </div>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/js/warper.js"></script>
+  </body>
+</html>

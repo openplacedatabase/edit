@@ -1,7 +1,8 @@
-var express = require('express');
-var app = express();
+var path = require('path'),
+    express = require('express'),
+    app = express();
 
-app.use(express.static(__dirname + '/html'));
+app.use(express.static(path.join(__dirname, '/assets')));
 
-app.listen(8080);
-console.log('listening on port 8080');
+app.listen(8081);
+console.log('listening on port 8081');

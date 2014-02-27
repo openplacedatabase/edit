@@ -1,0 +1,43 @@
+#header {
+  overflow: auto;
+}
+
+#main {
+  overflow: auto;
+  min-height: 300px;
+}
+
+.main-col {
+  border: 1px solid #ccc;
+  height: 100%;
+  overflow: auto;
+  width: 50%;
+  float: left;
+  position: relative;
+}
+
+#image-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#loaded-image {
+  width: 100%;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+#image-buttons {
+  position: absolute;
+  bottom: 0;
+  padding: 15px;
+  width: 100%;
+}
+
+#zoom-buttons {
+  float: right;
+}
